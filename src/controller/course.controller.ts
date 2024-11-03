@@ -9,6 +9,8 @@ export class CourseController{
     constructor(private readonly CourseService: CourseService) {}
 
 
+    @Post('/category/create')
+
     @Post('/course/create')
     async createCourse(@Body() course: Course) {
         return this.CourseService.createCourse(course)
