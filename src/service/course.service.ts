@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { HttpStatus, Injectable, Response } from "@nestjs/common";
 import {CourseRepository} from '../repository/course.repository';
-import { Course } from "src/repository/schema";
+
 
 
 
@@ -8,9 +8,20 @@ import { Course } from "src/repository/schema";
 @Injectable()
 export class CourseService {
 
-    constructor(private readonly CourseRepository: CourseRepository) {}
+    constructor(private readonly courseRepository: CourseRepository) {}
 
-    createCourse(course: Course) {
+
+
+    async createCategory( request: Request, response: Response) {
+      const result = await this.courseRepository.createCategory(request.body);
+      return {
+        statusCode: HttpStatus.CREATED,
+        message: 'Category created successfully',
+        data: result,
+      };
+    }
+
+    async createCourse() {
         return true;
       }
 

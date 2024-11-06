@@ -1,6 +1,6 @@
-import { Body, Controller, Post, Get } from "@nestjs/common";
+import { Body, Controller, Post, Get, Req, Res } from "@nestjs/common";
 import {CourseService} from '../service/course.service';
-import { Course, Category, SubCategory } from '../repository/schema';
+
 
 
 
@@ -10,10 +10,13 @@ export class CourseController{
 
 
     @Post('/category/create')
+    async createCategory(@Body() @Req() req: Request, @Res() res: Response) {
+        return this.CourseService.createCategory(req,res)
+    }
 
     @Post('/course/create')
-    async createCourse(@Body() course: Course) {
-        return this.CourseService.createCourse(course)
+    async createCourse(@Body() @Req() req: Request, @Res() res: Response) {
+        return this.CourseService.createCourse()
     }
 
 }
