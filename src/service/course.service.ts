@@ -19,7 +19,7 @@ export class CourseService {
 
       const getCategory = await this.courseRepository.getCategory(name);
 
-      console.log(getCategory)
+      console.log(getCategory, true)
       //const result = await this.courseRepository.createCategory(request.body);
       return {
         statusCode: HttpStatus.CREATED,
