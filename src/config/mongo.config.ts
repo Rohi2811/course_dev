@@ -1,28 +1,42 @@
 // src/config/mongoClient.ts
 import { MongoClient, Db, Collection } from 'mongodb';
 
+const url = 'mongodb+srv://rohithkumar1909:IFghXIuTRnZiwCJ6@test1.9lokv.mongodb.net/?retryWrites=true&w=majority&appName=test1';
+const db = 'course_dev';
 
-let mongoDb: Db | null = null;
 
-async function connectToMongo(): Promise<void> {
-  if (!mongoDb) {
-    const client = new MongoClient(process.env.MONGO_URL || 'mongodb+srv://rohithkumar1909:IFghXIuTRnZiwCJ6@test1.9lokv.mongodb.net/?retryWrites=true&w=majority&appName=test1');
+export class MongoDBClient {
+  private static isMongoConnected = false;
+  private static mongoDb;
 
-    try {
-      await client.connect();
-      console.log('Mongo connection established.');
-      mongoDb = client.db(process.env.DB_NAME);
-    } catch (err) {
-      console.error('Error occurred while connecting to MongoDB:', err);
-      throw err;
-    }
+public static getMongoConnection(result: (mongoConnection) => void) {
+  console.log('Getting Mongo connection...');
+    
+  if (this.isMongoConnected) {
+    console.log('Mongo is connected...');
+    return result(this.mongoDb);
+  } else {
+    console.log('Getting New Mongo connection...');
+    this.mongoDb = this.setMongoConnection();
+    this.isMongoConnected = true
+    return result(this.mongoDb);
   }
 }
 
+static setMongoConnection(){
 
-export async function getYourCollection(): Promise<Collection> {
-  await connectToMongo();
-  return mongoDb!.collection('course_dev');
+  let client = new MongoClient(url);
+  return new Promise((resolve, reject) => {
+    client.connect().then(() => {
+        console.log('Established: Mongo connection');
+        this.mongoDb = client.db(db);
+        resolve(this.mongoDb);
+    }).catch(function(err){
+        console.error('Error occurred while connecting to MongoDB:', err);
+        reject(err);
+    });
+  });
+}
 }
 
 

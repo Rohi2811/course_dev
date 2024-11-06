@@ -12,12 +12,19 @@ export class CourseService {
 
 
 
-    async createCategory( request: Request, response: Response) {
-      const result = await this.courseRepository.createCategory(request.body);
+    async createCategory( body: any) {
+      console.log("ody is", body)
+      
+      const {name, description} = body
+
+      const getCategory = await this.courseRepository.getCategory(name);
+
+      console.log(getCategory)
+      //const result = await this.courseRepository.createCategory(request.body);
       return {
         statusCode: HttpStatus.CREATED,
         message: 'Category created successfully',
-        data: result,
+        
       };
     }
 

@@ -1,27 +1,27 @@
 // src/repositories/SomeRepository.ts
 import { Injectable } from '@nestjs/common';
-import { getYourCollection  } from '../config/mongo.config';
-import { Collection } from 'mongodb';
+import { MongoDBClient  } from '../config/mongo.config';
+import { Db } from 'mongodb';
 
 @Injectable()
 export class CourseRepository {
-  private collection: Collection;
-
+  private mongoDb: Db;
   constructor() {
-    //for connecting to DB
-    getYourCollection().then((collection) => {
-      this.collection = collection;
-    }).catch((error) => {
-      console.error("Failed to connect to MongoDB:", error);
-    });
+      MongoDBClient.getMongoConnection(async (connection) => {
+          this.mongoDb = connection;
+      });
+  };
+
+
+  async getCategory(name) {
+    return await this.mongoDb.collection('category').findOne({name})
   }
 
 
-
- async createCategory(categoryDto) {
-    const data = await this.collection.find({}).toArray();
-    return data;
- }
+//  async createCategory(categoryDto) {
+//     const data = await this.collection.find({}).toArray();
+//     return data;
+//  }
 
 
   
